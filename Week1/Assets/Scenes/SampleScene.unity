@@ -154,6 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   aiPrefab: {fileID: 8426125039409418825, guid: 1f7443dc6c5a36147a679f99065fb750, type: 3}
   cubePrefab: {fileID: 3339381119677904799, guid: 6d17751019cba2a48bb47d3354caddd7, type: 3}
+  cooldown: 2
 --- !u!4 &117068993
 Transform:
   m_ObjectHideFlags: 0
@@ -389,7 +390,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cad07cb9dfdaef349a27d31bb1191a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 15
+  moveSpeed: 6
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0

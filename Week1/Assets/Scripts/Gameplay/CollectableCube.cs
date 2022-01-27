@@ -8,6 +8,7 @@ public class CollectableCube : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            Services.cubeManager.deleteCube(this.gameObject);
             Destroy(this.gameObject);
         }
     }
