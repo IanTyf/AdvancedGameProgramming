@@ -9,6 +9,8 @@ public class CollectableCube : MonoBehaviour
         if (other.tag == "Player")
         {
             Services.cubeManager.deleteCube(this.gameObject);
+            int teamID = other.GetComponent<AIMovement>().teamID;
+            Services.eventManager.Fire(new Event_GoalScored(teamID));
             Destroy(this.gameObject);
         }
     }

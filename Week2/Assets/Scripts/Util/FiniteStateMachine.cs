@@ -33,6 +33,18 @@ public class FiniteStateMachine<TContext>
 		PerformPendingTransition();
 	}
 
+	public void FixedUpdate()
+	{
+		PerformPendingTransition();
+
+		Debug.Assert(CurrentState != null,
+			"Updating FiniteStateMachine with null current state. Did you forget to transition to a starting state?");
+
+		CurrentState.FixedUpdate();
+
+		PerformPendingTransition();
+	}
+
 	public void TransitionTo<TState>() where TState : State
 	{
 		PendingState = GetOrCreateState<TState>();
@@ -122,6 +134,8 @@ public class FiniteStateMachine<TContext>
 		public virtual void OnExit() { }
 
 		public virtual void Update() { }
+
+		public virtual void FixedUpdate() { }
 
 		public virtual void CleanUp() { }
 		

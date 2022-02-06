@@ -9,6 +9,8 @@ public class AIMovement : MonoBehaviour
     private GameObject target;
     private Rigidbody rb;
 
+    public int teamID;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody>();

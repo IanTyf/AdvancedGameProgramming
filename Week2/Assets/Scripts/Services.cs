@@ -13,8 +13,8 @@ public class Services : MonoBehaviour
 
     public static void Init()
     {
-        aiManager = new AILifecycle();
-        cubeManager = new CubeManager();
+        //aiManager = new AILifecycle();
+        //cubeManager = new CubeManager();
         eventManager = new EventManager();
     }
 }

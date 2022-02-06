@@ -7,9 +7,11 @@ public class AILifecycle
     private List<GameObject> AIs = new List<GameObject>();
 
     // creation
-    public void createAI(GameObject ai, Vector3 pos)
+    public void createAI(GameObject ai, Vector3 pos, int teamID, Material mat)
     {
         ai.transform.position = pos;
+        ai.GetComponent<AIMovement>().teamID = teamID;
+        ai.GetComponent<MeshRenderer>().material = mat;
         AIs.Add(ai);
     }
 
