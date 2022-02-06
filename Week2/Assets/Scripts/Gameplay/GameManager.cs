@@ -16,14 +16,16 @@ public class GameManager : MonoBehaviour
 
     public Material[] teamMats;
 
+    public int GameTime;
+    public float CubeSpawnCooldown;
+
+
     private int redScore = 0;
     private int blueScore = 0;
-
-    [SerializeField]
+    
     private float cooldown = 2f;
     private float timer;
-    [SerializeField]
-    private float gameTime = 30f;
+    private float gameTime;
 
     void Awake()
     {
@@ -102,8 +104,12 @@ public class GameManager : MonoBehaviour
             Context.createAIsAtRandomPos(5);
             Context.createCollectableCubes(10);
 
+            Services.eventManager.Register<Event_GameStarted>(onStartGame);
             Services.eventManager.Register<Event_GoalScored>(onGoal);
             Services.eventManager.Register<Event_TimedOut>(timeOut);
+
+            // this seems redundant for now but it's the logical way to do it
+            Services.eventManager.Fire(new Event_GameStarted());
         }
 
         public override void Update()
@@ -122,7 +128,6 @@ public class GameManager : MonoBehaviour
             if (Context.gameTime <= 0)
             {
                 Services.eventManager.Fire(new Event_TimedOut(Context.blueScore, Context.redScore));
-                TransitionTo<StateEndGame>();
             }
             Context.updateTimeLeftUI();
         }
@@ -136,8 +141,23 @@ public class GameManager : MonoBehaviour
         public override void OnExit()
         {
             base.OnExit();
+            Services.eventManager.Unregister<Event_GameStarted>(onStartGame); // just in case for some reason game never actually started
             Services.eventManager.Unregister<Event_GoalScored>(onGoal);
             Services.eventManager.Unregister<Event_TimedOut>(timeOut);
+        }
+
+        private void onStartGame(AGPEvent e)
+        {
+            Debug.Log("Game Started");
+            Context.redScore = 0;
+            Context.blueScore = 0;
+            Context.gameTime = Context.GameTime;
+            Context.timer = 0;
+            Context.cooldown = Context.CubeSpawnCooldown;
+            Context.updateScoreUI();
+            
+            // because we only want start game event happen once
+            Services.eventManager.Unregister<Event_GameStarted>(onStartGame);
         }
 
         private void onGoal(AGPEvent e)
@@ -152,15 +172,30 @@ public class GameManager : MonoBehaviour
 
         private void timeOut(AGPEvent e)
         {
-            //check the score and determine a winner
-
+            Context.updateWinnerUI();
+            Services.aiManager.deleteAllAIs();
+            Services.cubeManager.deleteAllCubes();
+            Destroy(Services.player.gameObject);
             TransitionTo<StateEndGame>();
         }
     }
 
     private class StateEndGame : baseState
     {
-        
+        public override void OnEnter()
+        {
+            base.OnEnter();
+            Context.EndGameUI.SetActive(true);
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                TransitionTo<StateTitleScreen>();
+            }
+        }
     }
 
     private void updateScoreUI()
@@ -174,6 +209,15 @@ public class GameManager : MonoBehaviour
         MainGameUI.transform.GetChild(2).gameObject.GetComponent<Text>().text = "Time Left: " + (int)gameTime;
     }
 
+    private void updateWinnerUI()
+    {
+        string winnerText = "";
+        if (redScore > blueScore) winnerText = "RED TEAM WINS!!! " + redScore + " : " + blueScore;
+        else if (redScore < blueScore) winnerText = "BLUE TEAM WINS!!! " + blueScore + " : " + redScore;
+        else winnerText = "ITS A TIE?!?!!! DAMN GOOD GAME " + redScore + " : " + blueScore;
+        EndGameUI.transform.GetChild(0).gameObject.GetComponent<Text>().text = winnerText;
+    }
+
     // create a number of AIs at random positions on the plane and return them in a list
     private List<GameObject> createAIsAtRandomPos(int numOfAI)
     {
@@ -181,8 +225,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numOfAI; i++)
         {
             Vector3 randPos = new Vector3(Random.Range(-13f, 13f), 0.5f, Random.Range(-8f, 8f));
-            GameObject newAI = Instantiate(aiPrefab, transform);
-            Services.aiManager.createAI(newAI, randPos, i % 2, teamMats[i%2]);
+            GameObject newAI = Services.aiManager.createAI(aiPrefab, randPos, i % 2, teamMats[i%2]);
             retAIs.Add(newAI);
         }
         return retAIs;
@@ -195,8 +238,7 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numOfCubes; i++)
         {
             Vector3 randPos = new Vector3(Random.Range(-13f, 13f), 0.5f, Random.Range(-8f, 8f));
-            GameObject newCube = Instantiate(cubePrefab, transform);
-            Services.cubeManager.createCube(newCube, randPos);
+            GameObject newCube = Services.cubeManager.createCube(cubePrefab, randPos);
             retCubes.Add(newCube);
         }
         return retCubes;

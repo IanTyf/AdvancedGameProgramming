@@ -7,12 +7,14 @@ public class AILifecycle
     private List<GameObject> AIs = new List<GameObject>();
 
     // creation
-    public void createAI(GameObject ai, Vector3 pos, int teamID, Material mat)
+    public GameObject createAI(GameObject aiPref, Vector3 pos, int teamID, Material mat)
     {
-        ai.transform.position = pos;
-        ai.GetComponent<AIMovement>().teamID = teamID;
-        ai.GetComponent<MeshRenderer>().material = mat;
-        AIs.Add(ai);
+        GameObject newAI = Object.Instantiate(aiPref);
+        newAI.transform.position = pos;
+        newAI.GetComponent<AIMovement>().teamID = teamID;
+        newAI.GetComponent<MeshRenderer>().material = mat;
+        AIs.Add(newAI);
+        return newAI;
     }
 
     // updating
@@ -38,6 +40,15 @@ public class AILifecycle
     public void deleteAI(GameObject ai)
     {
         AIs.Remove(ai);
+        Object.Destroy(ai);
+    }
+    public void deleteAllAIs()
+    {
+        foreach (GameObject ai in AIs)
+        {
+            Object.Destroy(ai);
+        }
+        AIs.Clear();
     }
 
     // tracking

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public int teamID;
+
     [SerializeField]
     private float moveSpeed;
     private Rigidbody rb;
