@@ -10,13 +10,17 @@ public class CubeAgent : Agent
     public GameObject ball;
     private Rigidbody ballRb;
     private Ball ballScript;
-    private Vector3 startingPos;
+    public Vector3 startingPos;
+    private Transform cube;
+    private Rigidbody cubeRb;
 
     public override void Initialize()
     {
         ballRb = ball.GetComponent<Rigidbody>();
+        cube = transform.GetChild(0);
+        cubeRb = cube.GetComponent<Rigidbody>();
         ballScript = ball.GetComponent<Ball>();
-        startingPos = transform.position;
+        startingPos = cube.position;
         //SetResetParameters();
     }
 
@@ -24,9 +28,14 @@ public class CubeAgent : Agent
     public override void OnEpisodeBegin()
     {
         // reset cube rotation w/ some random rotation
+        cube.position = startingPos;
+        cubeRb.velocity = Vector3.zero;
+        cubeRb.angularVelocity = Vector3.zero;
+        cube.transform.rotation = new Quaternion(0, 0, 0, 0);
         gameObject.transform.rotation = new Quaternion(0, 0, 0, 0);
         gameObject.transform.Rotate(new Vector3(1, 0, 0), Random.Range(-10f, 10f));
         gameObject.transform.Rotate(new Vector3(0, 0, 1), Random.Range(-10f, 10f));
+        
 
         // reset ball velocity and position
         ballRb.velocity = Vector3.zero;
@@ -36,47 +45,57 @@ public class CubeAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(transform.rotation.z);
-        sensor.AddObservation(transform.rotation.x);
-        sensor.AddObservation(ball.transform.position - transform.position);
+        sensor.AddObservation(cube.rotation.z);
+        sensor.AddObservation(cube.rotation.x);
+        sensor.AddObservation(ball.transform.position - cube.position);
         sensor.AddObservation(ballRb.velocity);
+        sensor.AddObservation(cubeRb.velocity);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        var actionZ = 4f * Mathf.Clamp(actions.ContinuousActions[0], -1f, 1f);
-        var actionX = 4f * Mathf.Clamp(actions.ContinuousActions[1], -1f, 1f);
-        var vertMovement = 100f * Mathf.Clamp(actions.ContinuousActions[2], -1f, 1f);
+        var actionZ = 2f * Mathf.Clamp(actions.ContinuousActions[0], -1f, 1f);
+        var actionX = 2f * Mathf.Clamp(actions.ContinuousActions[1], -1f, 1f);
+        var vertMovement = 8000f * Mathf.Clamp(actions.ContinuousActions[2], -1f, 1f);
 
-        if ((transform.rotation.z < 0.25f && actionZ > 0f) || (transform.rotation.z > -0.25f && actionZ < 0f))
+        if ((cube.rotation.z < 0.25f && actionZ > 0f) || (cube.rotation.z > -0.25f && actionZ < 0f))
         {
-            transform.Rotate(new Vector3(0, 0, 1), actionZ);
+            cube.Rotate(new Vector3(0, 0, 1), actionZ);
         }
-        if ((transform.rotation.x < 0.25f && actionX > 0f) || (transform.rotation.x > -0.25f && actionX < 0f))
+        if ((cube.rotation.x < 0.25f && actionX > 0f) || (cube.rotation.x > -0.25f && actionX < 0f))
         {
-            transform.Rotate(new Vector3(1, 0, 0), actionX);
+            cube.Rotate(new Vector3(1, 0, 0), actionX);
         }
-        if ((transform.position.y < startingPos.y + 0.5 && vertMovement > 0) || (transform.position.y > startingPos.y - 0.5 && vertMovement < 0))
+        if ((cube.position.y < startingPos.y + 0.5 && vertMovement > 0) || (cube.position.y > startingPos.y - 0.5 && vertMovement < 0))
         {
-            transform.Translate(Vector3.up * vertMovement * Time.deltaTime);
+            cubeRb.AddForce(Vector3.up * vertMovement);
+        }
+        if ((cube.position.y >= startingPos.y + 0.5) || (cube.position.y <= startingPos.y - 0.5))
+        {
+            cubeRb.velocity = Vector3.zero;
         }
 
-        if (ball.transform.position.y - transform.position.y < -3f 
-            || Mathf.Abs(ball.transform.position.x - transform.position.x) > 5f
-            || Mathf.Abs(ball.transform.position.z - transform.position.z) > 5f)
+        if (ball.transform.position.y - cube.position.y < -3f 
+            || Mathf.Abs(ball.transform.position.x - cube.position.x) > 5f
+            || Mathf.Abs(ball.transform.position.z - cube.position.z) > 5f)
         {
             SetReward(-1f);
             EndEpisode();
         }
-        
-        if (ballScript.hop)
+        else if (ballScript.hop)
         {
             SetReward(2f);
             ballScript.hop = false;
         }
-        else
+        else if (ballScript.isTouching)
         {
-            SetReward(ballScript.timeInAir * 0.1f);
+            //SetReward(ballScript.timeTouching * 0.1f);
+            SetReward(0.1f);
+        }
+        else if (!ballScript.isTouching)
+        {
+            //SetReward(ballScript.timeInAir * 0.1f);
+            //SetReward(0.1f);
         }
     }
 
