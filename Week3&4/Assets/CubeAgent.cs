@@ -94,8 +94,7 @@ public class CubeAgent : Agent
         }
         else if (!ballScript.isTouching)
         {
-            //SetReward(ballScript.timeInAir * 0.1f);
-            //SetReward(0.1f);
+            SetReward(ballScript.timeInAir * ballScript.timeInAir * 0.1f); // use this one to train high bounces, starting from scratch
         }
     }
 
