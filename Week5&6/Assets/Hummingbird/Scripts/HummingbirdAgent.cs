@@ -38,7 +38,7 @@ public class HummingbirdAgent : Agent
 
 	private bool frozen = false;
 
-	public float NectarObtained { get; private set; }
+	public float NectarObtained { get; set; }
 
 	public override void Initialize()
 	{
@@ -46,6 +46,8 @@ public class HummingbirdAgent : Agent
 		flowerManager = GetComponentInParent<FlowerManager>();
 
 		if (!trainingMode) MaxStep = 0;
+
+		BirdManager.birds.Add(this.gameObject);
 	}
 
 	public override void OnEpisodeBegin()
@@ -183,6 +185,11 @@ public class HummingbirdAgent : Agent
 		sensor.AddObservation(Vector3.Dot(beakTip.forward.normalized, -nearestFlower.FlowerUpVector.normalized));
 
 		sensor.AddObservation(toFlower.magnitude / FlowerManager.AreaDiameter);
+
+		GameObject closestBird = BirdManager.getClosestBird(transform.position);
+		sensor.AddObservation(closestBird.transform.position);
+		sensor.AddObservation(closestBird.transform.forward);
+		sensor.AddObservation(closestBird.GetComponent<HummingbirdAgent>().NectarObtained);
 	}
 
 	public override void Heuristic(in ActionBuffers actionsOut)
@@ -265,6 +272,21 @@ public class HummingbirdAgent : Agent
 				if (!flower.HasNectar)
 				{
 					UpdateNearestFlower();
+				}
+			}
+		}
+		if (collider.CompareTag("stealTrigger"))
+		{
+			HummingbirdAgent other = collider.transform.parent.GetComponent<HummingbirdAgent>();
+			if (other.NectarObtained >= 0.01f)
+			{
+				other.NectarObtained -= 0.01f;
+				NectarObtained += 0.01f;
+
+				if (trainingMode)
+				{
+					AddReward(0.05f);
+					other.AddReward(-0.1f);
 				}
 			}
 		}
