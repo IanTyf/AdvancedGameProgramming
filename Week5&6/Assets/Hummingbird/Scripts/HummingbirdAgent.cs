@@ -187,8 +187,8 @@ public class HummingbirdAgent : Agent
 		sensor.AddObservation(toFlower.magnitude / FlowerManager.AreaDiameter);
 
 		GameObject closestBird = BirdManager.getClosestBird(transform.position);
-		sensor.AddObservation(closestBird.transform.position);
-		sensor.AddObservation(closestBird.transform.forward);
+		sensor.AddObservation(closestBird.transform.position - transform.position);
+		sensor.AddObservation(Vector3.Dot(beakTip.forward.normalized, closestBird.transform.forward.normalized));
 		sensor.AddObservation(closestBird.GetComponent<HummingbirdAgent>().NectarObtained);
 	}
 
@@ -285,8 +285,8 @@ public class HummingbirdAgent : Agent
 
 				if (trainingMode)
 				{
-					AddReward(0.05f);
-					other.AddReward(-0.1f);
+					AddReward(20f);
+					other.AddReward(-1f);
 				}
 			}
 		}
