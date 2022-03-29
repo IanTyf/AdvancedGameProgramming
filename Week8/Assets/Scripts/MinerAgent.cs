@@ -23,7 +23,7 @@ public class MinerAgent : Agent
 	[SerializeField]
 	float rotateSpeed = 3;
 	[SerializeField]
-	float speed = 100;
+	float speed = 50;
 	[SerializeField]
 	float maxSpeed = 3;
 	[SerializeField]
@@ -139,9 +139,11 @@ public class MinerAgent : Agent
 	{
 		if (!dashing)
 		{
-			if (rB.velocity.magnitude > maxSpeed)
+			Vector2 velocityXZ = new Vector2(rB.velocity.x, rB.velocity.z);
+			if (velocityXZ.magnitude > maxSpeed)
 			{
-				rB.velocity = rB.velocity.normalized * maxSpeed;
+				velocityXZ = velocityXZ.normalized * maxSpeed;
+				rB.velocity = new Vector3(velocityXZ.x, rB.velocity.y, velocityXZ.y);
 			}
 
 			if (!dashCDReady)
@@ -159,12 +161,14 @@ public class MinerAgent : Agent
 		}
 		else
 		{
-			if (rB.velocity.magnitude > maxDashSpeed)
+			Vector2 velocityXZ = new Vector2(rB.velocity.x, rB.velocity.z);
+			if (velocityXZ.magnitude > maxDashSpeed)
 			{
-				rB.velocity = rB.velocity.normalized * maxDashSpeed;
+				velocityXZ = velocityXZ.normalized * maxSpeed;
+				rB.velocity = new Vector3(velocityXZ.x, rB.velocity.y, velocityXZ.y);
 			}
 
-			if(dashingTimer > 0)
+			if (dashingTimer > 0)
 			{
 				dashingTimer -= Time.fixedDeltaTime;
 			}
@@ -217,16 +221,34 @@ public class MinerAgent : Agent
 
 	private void OnTriggerEnter(Collider other)
 	{
-		if (!other.tag.Contains("Gold")) return;
+		//if (!other.tag.Contains("Gold") && !other.tag.Contains("Gap")) return;
 
-		AddReward(.1f);
-		if (dashing)
+		if (other.tag.Contains("Gold"))
 		{
-			AddReward(.02f);
-		}
-		gameGroup.event_GoalScored.Invoke(teamID);
+			AddReward(.1f);
+			if (dashing)
+			{
+				AddReward(.02f);
+			}
+			gameGroup.event_GoalScored.Invoke(teamID);
 
-		gameGroup.DestroyGold(other.gameObject.transform);
+			gameGroup.DestroyGold(other.gameObject.transform);
+		}
+		else if (other.tag.Contains("Gap"))
+		{
+			if (dashing)
+			{
+				AddReward(.05f);
+			}
+		}
+		else if (other.tag.Contains("Reset"))
+		{
+			//AddReward(-0.01f);
+			transform.localPosition = originalPos;
+			transform.localRotation = originalRota;
+			cubeRenderer.material.SetColor("_Color", originalColor);
+			rB.velocity = Vector3.zero;
+		}
 	}
 	private void OnCollisionEnter(Collision other)
 	{

@@ -8,6 +8,8 @@ TagManager:
   - GameAgent_0
   - Wall
   - Gold
+  - Gap
+  - Reset
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - UI
   - Wall
   - Gold
-  - 
+  - Gap
   - 
   - 
   - 
