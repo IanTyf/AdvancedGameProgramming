@@ -30,6 +30,7 @@ public class AIBehavior : MonoBehaviour
 
         var walkTree = new Tree<AIBehavior>(
             new Sequence<AIBehavior>(
+                new MoveWithPlayer(),
                 new Walk()
             )
         );
@@ -78,6 +79,16 @@ public class AIBehavior : MonoBehaviour
         {
             context.rb.AddForce(Vector3.up * context.jumpSpeed, ForceMode.Impulse);
             context.jumping = true;
+            return true;
+        }
+    }
+
+    public class MoveWithPlayer : Node<AIBehavior>
+    {
+        public override bool Update(AIBehavior context)
+        {
+            if (context.player.GetComponent<PlayerController>().moving) context.moveSpeed = 5 * Mathf.Sign(context.moveSpeed);
+            else context.moveSpeed = 3 * Mathf.Sign(context.moveSpeed);
             return true;
         }
     }

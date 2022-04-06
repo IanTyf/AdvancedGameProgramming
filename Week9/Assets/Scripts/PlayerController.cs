@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     public float speed;
+    public bool moving;
     private Rigidbody rb;
 
     // Start is called before the first frame update
@@ -18,6 +19,9 @@ public class PlayerController : MonoBehaviour
     {
         float hMovement = Input.GetAxis("Horizontal");
         transform.position = transform.position + Vector3.right * hMovement * speed * Time.deltaTime;
+
+        if (hMovement == 0) moving = false;
+        else moving = true;
     }
 
     private void FixedUpdate()
