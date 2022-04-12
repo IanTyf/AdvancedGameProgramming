@@ -20,6 +20,8 @@ public class CharacterBehavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        rk = GameObject.Find("ReferenceKeeper").GetComponent<ReferenceKeeper>();
+
         int randInd = Random.Range(0, rk.characterDB.characters.Length);
         Character c = rk.characterDB.characters[randInd];
 
@@ -72,6 +74,7 @@ public class CharacterBehavior : MonoBehaviour
     void Update()
     {
         _tree.Update(this);
+        transform.rotation = Quaternion.identity;
     }
 
     public class Rand : Node<CharacterBehavior>
@@ -102,7 +105,7 @@ public class CharacterBehavior : MonoBehaviour
         public override bool Update(CharacterBehavior context)
         {
             context.timer += Time.deltaTime;
-            if (context.timer > 4 - context.speed)
+            if (context.timer > 2 - context.speed/2f)
             {
                 context.timer = 0;
                 switch (dir)
@@ -122,6 +125,19 @@ public class CharacterBehavior : MonoBehaviour
             }
 
             return true;
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag != "Character") return;
+
+        CharacterBehavior other = collision.gameObject.GetComponent<CharacterBehavior>();
+        if (size < other.size)
+        {
+            other.size++;
+            other.gameObject.transform.localScale = 0.2f * other.size * Vector3.one;
+            Destroy(this.gameObject);
         }
     }
 }
