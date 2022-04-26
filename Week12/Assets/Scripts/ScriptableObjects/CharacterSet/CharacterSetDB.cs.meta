@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 7a8d4ec0ab0ae6e459751a9e0756a08a
+timeCreated: 1520012368
+licenseType: Pro
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - inGameProperties: {fileID: 11400000, guid: 6b0494dbf624c3d4da66bf57c0d1cdd9, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

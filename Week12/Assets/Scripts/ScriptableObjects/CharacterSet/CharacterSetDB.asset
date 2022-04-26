@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a8d4ec0ab0ae6e459751a9e0756a08a, type: 3}
+  m_Name: CharacterSetDB
+  m_EditorClassIdentifier: 
+  cosplayerSet:
+  - sBody: {fileID: 21300014, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sHead: {fileID: 21300008, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sHair: {fileID: 21300010, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sFace: {fileID: 21300012, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sLegsL: {fileID: 21300006, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sLegsR: {fileID: 21300004, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sHandL: {fileID: 21300002, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+    sHandR: {fileID: 21300000, guid: 5705470cfb0b3b74d82f5b1837f12a23, type: 3}
+  - sBody: {fileID: 21300014, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sHead: {fileID: 21300008, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sHair: {fileID: 21300010, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sFace: {fileID: 21300012, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sLegsL: {fileID: 21300006, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sLegsR: {fileID: 21300004, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sHandL: {fileID: 21300002, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}
+    sHandR: {fileID: 21300000, guid: 91e99a10524a9a047bf05fe7b0792a3f, type: 3}

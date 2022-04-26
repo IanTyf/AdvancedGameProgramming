@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03e0e8aecb0ca654fa3d05f87a121db2, type: 3}
+  m_Name: languageExcelData
+  m_EditorClassIdentifier: 
+  items:
+  - id: T001
+    name: Title_Menu
+    English: Menu
+    SimplifiedChinese: "\u83DC\u5355"
+  - id: B001
+    name: Button_Resume
+    English: Resume
+    SimplifiedChinese: "\u7EE7\u7EED"
+  - id: B002
+    name: Button_Options
+    English: Options
+    SimplifiedChinese: "\u9009\u9879"
+  - id: B003
+    name: Button_BackToMenu
+    English: Back To Menu
+    SimplifiedChinese: "\u8FD4\u56DE\u4E3B\u83DC\u5355"
+  - id: B004
+    name: Button_Quit
+    English: Quit
+    SimplifiedChinese: "\u9000\u51FA"
+  - id: B005
+    name: Button_RestartLevel
+    English: Restart Level
+    SimplifiedChinese: "\u91CD\u73A9\u672C\u5173"
+  - id: B006
+    name: Button_ChangeLanguage
+    English: Change Language
+    SimplifiedChinese: "\u66F4\u6539\u8BED\u8A00"
+  - id: B007
+    name: Button_English
+    English: English
+    SimplifiedChinese: "\u82F1\u8BED"
+  - id: B008
+    name: Button_SimplifiedChinese
+    English: Simplified Chinese
+    SimplifiedChinese: "\u7B80\u4F53\u4E2D\u6587"
